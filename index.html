@@ -150,6 +150,9 @@ footer{margin-top:30px;text-align:center;font-size:12px;color:var(--ink-soft)}
   td .pct{width:44px}
   tr{page-break-inside:avoid}
   thead{display:table-header-group}
+  /* แท็บตกเบิก: พิมพ์แยกหน้า 3 ตาราง (รวมทุกคน / รายบุคคล / แนวทางบันทึกบัญชี) */
+  .pgbreak{break-before:page;page-break-before:always}
+  #retro .ledger,#retro .ledger h4,#retro .ledger .jrow{font-size:16pt!important}
   .noprint{display:none!important}
   #d1 .roster h3,#d2 .roster h3,#d3 .roster h3,#d4 .roster h3,#d5 .roster h3{display:none!important}
   header .emblem,.databar,.flow,.tabs,.panel-note,.grid,.result,.btnrow,details,footer,td .del,th.nop,td.nop{display:none!important}
@@ -375,10 +378,10 @@ html.measuring .noprint,html.measuring th.nop,html.measuring td.nop,html.measuri
 
 <!-- ===================== ตกเบิก & บันทึกบัญชี ===================== -->
 <section class="panel" id="retro">
-  <div class="panel-note"><b>ภาพรวมสุดท้าย — สรุปเงินตกเบิก เรียกคืนค่าครองชีพ และแนวทางบันทึกบัญชี (New e-LAAS)</b><span class="auto-tag">คำนวณอัตโนมัติ</span><br>
-  ระบบเปรียบเทียบรายเดือนระหว่างอัตรา <b>"เดิม"</b> (เส้นทางค่าจ้างหากไม่มีการปรับฐาน แต่ยังได้เลื่อนค่าตอบแทนประจำปีตามร้อยละเดิม) กับ <b>"ใหม่"</b> (หลังปรับฐานตามเอกสาร 1–5) แยกตามช่วงเวลา เพื่อหา<b>เงินตกเบิกค่าตอบแทนที่ต้องเบิกจ่ายเพิ่ม (จ่ายคืน)</b> และ<b>เงินเพิ่มการครองชีพชั่วคราวที่ต้องเรียกคืน</b> ตามแนวทางการบันทึกบัญชีของ สถ. — เดือนที่จ้างไม่เต็มเดือน คิดเป็นเศษเดือนตามสัดส่วน จำนวนวันที่จ้าง ÷ จำนวนวันของเดือนนั้น</div>
+  <div class="panel-note"><b>ภาพรวมสุดท้าย — สรุปเงินตกเบิก เรียกคืนค่าครองชีพ และแนวทางบันทึกบัญชี</b><span class="auto-tag">คำนวณอัตโนมัติ</span><br>
+  ระบบเปรียบเทียบรายเดือนระหว่างอัตรา <b>"เดิม"</b> (เส้นทางค่าจ้างหากไม่มีการปรับฐาน แต่ยังได้เลื่อนค่าตอบแทนประจำปีตามร้อยละเดิม) กับ <b>"ใหม่"</b> (หลังปรับฐานตามเอกสาร 1–5) แยกตามช่วงเวลา เพื่อหา<b>เงินตกเบิกค่าตอบแทนที่ต้องเบิกจ่ายเพิ่ม (จ่ายคืน)</b> และ<b>เงินเพิ่มการครองชีพชั่วคราวที่ต้องเรียกคืน</b> ตามแนวทางการบันทึกบัญชีที่เกี่ยวข้อง — เดือนที่จ้างไม่เต็มเดือน คิดเป็นเศษเดือนตามสัดส่วน จำนวนวันที่จ้าง ÷ จำนวนวันของเดือนนั้น</div>
   <div class="grid" style="margin-bottom:6px">
-    <div class="f c5"><label>คำนวณตกเบิกถึงสิ้นเดือน</label><select id="retro_until"></select><span class="hint">ค่าเริ่มต้นตามตารางตัวอย่างของ สถ. คือ 30 เม.ย. 2569</span></div>
+    <div class="f c5"><label>คำนวณตกเบิกถึงสิ้นเดือน</label><select id="retro_until"></select><span class="hint">ค่าเริ่มต้น 30 มิ.ย. 2569 — วันสิ้นสุดสัญญาในทุกเอกสารจะถูกจำกัดไม่ให้เกินเดือนที่เลือกนี้</span></div>
   </div>
   <div class="roster" style="margin-top:14px">
     <h3>ตารางรวมทุกคน แยกตามช่วงเวลา <span class="count" id="retro_count">0 ราย</span></h3>
@@ -390,7 +393,7 @@ html.measuring .noprint,html.measuring th.nop,html.measuring td.nop,html.measuri
       <tbody></tbody>
     </table></div>
   </div>
-  <div class="roster">
+  <div class="roster pgbreak">
     <h3>เงินตกเบิกรายบุคคล</h3>
     <div class="tblwrap"><table id="retro_ptable">
       <thead><tr><th>ลำดับ</th><th>ชื่อ – สกุล</th><th>สุทธิ ช่วง<br>พ.ค.–ก.ย. 67</th><th>สุทธิ ช่วง<br>ต.ค. 67–เม.ย. 68</th><th>สุทธิ ช่วง<br>พ.ค.–ก.ย. 68</th><th>สุทธิ ช่วง<br>ตั้งแต่ ต.ค. 68</th><th>จ่ายคืนรวม</th><th>เรียกคืนรวม</th><th>เงินตกเบิกสุทธิ</th></tr></thead>
@@ -398,7 +401,7 @@ html.measuring .noprint,html.measuring th.nop,html.measuring td.nop,html.measuri
     </table></div>
     <div class="btnrow"><button class="btn" data-print>🖨 พิมพ์ / บันทึกเป็น PDF</button></div>
   </div>
-  <div class="roster">
+  <div class="roster pgbreak">
     <h3>แนวทางการบันทึกบัญชี (สร้างอัตโนมัติจากยอดรวม)</h3>
     <div class="ledger" id="retro_journal"></div>
   </div>
@@ -560,7 +563,12 @@ function initBEDate(groupId,hiddenId,onChange,opts){
   return {
     clear(){[sd,sm,sy].forEach(s=>s.value="");hid.value="";g.style.outline="";lastErr="";},
     setEnabled(on){[sd,sm,sy].forEach(s=>s.disabled=!on);g.style.opacity=on?"":"0.5";},
-    error(){return lastErr;}
+    error(){return lastErr;},
+    /* ตั้งค่าวันที่จาก ISO (ค.ศ.) ลงใน dropdown แล้ว validate (ใช้ตอนแก้ไขข้อมูล) */
+    set(iso){ if(!iso){sd.value="";sm.value="";sy.value="";hid.value="";g.style.outline="";lastErr="";return;}
+      const[y,m,d]=iso.split("-").map(Number); sd.value=String(d); sm.value=String(m); sy.value=String(y+543); upd(); },
+    /* ปรับเพดานวันที่สูงสุดใหม่ แล้ว validate ค่าปัจจุบันซ้ำ (ใช้ผูกกับวันคำนวณตกเบิก) */
+    setMax(iso){ opts.max=iso; upd(); }
   };
 }
 function fmtDate(iso){ if(!iso)return "–"; const[y,m,d]=iso.split("-").map(Number); return d+" "+TH_M[m-1]+" "+(y+543); }
@@ -685,6 +693,7 @@ document.querySelectorAll("select[id$='_qual']").forEach(sel=>{
 });
 (function(){
   const $=s=>document.getElementById("d1_"+s);
+  let editId=null; const ADDLBL=$("add").textContent; /* โหมดแก้ไข: ถ้า editId!=null = กำลังแก้ไข record เดิม */
   /* กำหนดปีที่จ้างจากวันที่จ้าง: 1 พ.ค. 67 – 30 เม.ย. 68 = ปี 2567 / ตั้งแต่ 1 พ.ค. 68 = ปี 2568 */
   function yearCodeOf(hire){
     if(!hire) return null;
@@ -745,22 +754,39 @@ document.querySelectorAll("select[id$='_qual']").forEach(sel=>{
     ["fname","lname","pos"].forEach(k=>$(k).value="");
     hireCtl.clear();endCtl.clear();endCtl.setEnabled(false);
     $("endmode").value="now";
+    editId=null; $("add").textContent=ADDLBL;
     $("result").hidden=true;$("add").disabled=true;});
   $("add").addEventListener("click",()=>{
     const code=+$("qual").value, y=yearCodeOf($("hire").value);
     if(y!==1&&y!==2) return;
     const [oldRate,r67,r68]=NEWRATE[code];
-    EMP.push({id:seq++,name:($("fname").value.trim()+" "+$("lname").value.trim()).trim(),
+    const fn=$("fname").value.trim(), ln=$("lname").value.trim();
+    const rec={name:(fn+" "+ln).trim(),fname:fn,lname:ln,
               pos:$("pos").value.trim()||"–",qual:code,hire:$("hire").value,
               end:$("endmode").value==="date"?$("end").value:"",
-              src:"d1",d1:{yearCode:y,oldRate,newRate:y===1?r67:r68},pct3:"",pct5:""});
+              src:"d1",d1:{yearCode:y,oldRate,newRate:y===1?r67:r68}};
+    if(editId!=null){ const e=EMP.find(x=>x.id===editId); if(e) Object.assign(e,rec); } /* แก้ไข: คง id/pct3/pct5 เดิม */
+    else { rec.id=seq++; rec.pct3=""; rec.pct5=""; EMP.push(rec); }
     $("clear").click(); renderAll();
   });
+  window.D1FORM={
+    setEndMax(iso){ endCtl.setMax(iso); },
+    loadForEdit(e){
+      const fn=e.fname!=null?e.fname:((e.name||"").split(" ")[0]||"");
+      const ln=e.lname!=null?e.lname:((e.name||"").split(" ").slice(1).join(" "));
+      $("fname").value=fn; $("lname").value=ln; $("pos").value=(e.pos&&e.pos!=="–")?e.pos:"";
+      $("qual").value=e.qual; hireCtl.set(e.hire);
+      if(e.end){ $("endmode").value="date"; endCtl.setEnabled(true); endCtl.set(e.end); }
+      else { $("endmode").value="now"; endCtl.clear(); endCtl.setEnabled(false); }
+      editId=e.id; $("add").textContent="💾 บันทึกการแก้ไข (เอกสาร 1)"; recalc();
+    }
+  };
 })();
 
 /* ================= ฟอร์มเอกสาร 2 ================= */
 (function(){
   const $=s=>document.getElementById("d2_"+s);
+  let editId=null; const ADDLBL=$("add").textContent;
   function endOK(){ return $("endmode").value==="now" || ($("end").value && (!$("hire").value || $("end").value>=$("hire").value)); }
   function endWarn(){
     if($("endmode").value==="now") return "";
@@ -819,21 +845,37 @@ document.querySelectorAll("select[id$='_qual']").forEach(sel=>{
     ["fname","lname","pos","wage"].forEach(k=>$(k).value="");
     hireCtl.clear();endCtl.clear();endCtl.setEnabled(false);
     $("endmode").value="now";
+    editId=null; $("add").textContent=ADDLBL;
     $("result").hidden=true;$("add").disabled=true;});
   $("add").addEventListener("click",()=>{
     const code=+$("qual").value, wage=parseFloat($("wage").value);
     const res=calcComp(2567,code,wage);
     if(res.status==="error") return;
-    EMP.push({id:seq++,name:($("fname").value.trim()+" "+$("lname").value.trim()).trim(),
+    const fn=$("fname").value.trim(), ln=$("lname").value.trim();
+    const rec={name:(fn+" "+ln).trim(),fname:fn,lname:ln,
               pos:$("pos").value.trim()||"–",qual:code,hire:$("hire").value,
               end:$("endmode").value==="date"?$("end").value:"",
-              src:"d2",d2:{wage,res},pct3:"",pct5:""});
+              src:"d2",d2:{wage,res}};
+    if(editId!=null){ const e=EMP.find(x=>x.id===editId); if(e) Object.assign(e,rec); }
+    else { rec.id=seq++; rec.pct3=""; rec.pct5=""; EMP.push(rec); }
     $("clear").click(); renderAll();
   });
+  window.D2FORM={
+    setEndMax(iso){ endCtl.setMax(iso); },
+    loadForEdit(e){
+      const fn=e.fname!=null?e.fname:((e.name||"").split(" ")[0]||"");
+      const ln=e.lname!=null?e.lname:((e.name||"").split(" ").slice(1).join(" "));
+      $("fname").value=fn; $("lname").value=ln; $("pos").value=(e.pos&&e.pos!=="–")?e.pos:"";
+      $("qual").value=e.qual; $("wage").value=e.d2.wage; hireCtl.set(e.hire);
+      if(e.end){ $("endmode").value="date"; endCtl.setEnabled(true); endCtl.set(e.end); }
+      else { $("endmode").value="now"; endCtl.clear(); endCtl.setEnabled(false); }
+      editId=e.id; $("add").textContent="💾 บันทึกการแก้ไข (เอกสาร 2)"; recalc();
+    }
+  };
 })();
 
 /* ================= เงินตกเบิก (ภาพรวมสุดท้าย ตามแนวทาง New e-LAAS) ================= */
-let RETRO_UNTIL="2026-05-01"; /* exclusive: ค่าเริ่มต้นถึง 30 เม.ย. 2569 */
+let RETRO_UNTIL="2026-07-01"; /* exclusive: ค่าเริ่มต้นถึงสิ้นเดือน มิ.ย. 2569 (30 มิ.ย. 2569) */
 function isoD(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
 /* นับจำนวนเดือนที่จ้างภายในช่วง [sISO, xISO) — เดือนไม่เต็มคิดเป็นเศษ = จำนวนวันที่จ้าง ÷ จำนวนวันของเดือนนั้น */
 function monthsEmployed(e,sISO,xISO){
@@ -952,7 +994,7 @@ function renderRetro(){
   <h4>3. จัดทำใบผ่านรายการบัญชีทั่วไป</h4>
   <div class="jrow"><span>เดบิต เงินสะสม ***</span><span class="amt">${fmtB(A)}</span></div>
   <div class="jrow"><span class="ind1 cr">เครดิต เงินค่าตอบแทนพนักงานของ อปท. ****</span><span class="amt cr">${fmtB(A)}</span></div>
-  <div style="margin-top:10px;font-size:12.5px;color:var(--ink-soft)">หมายเหตุ: รูปแบบรายการอ้างอิงแนวทางการบันทึกบัญชีกรณีปรับฐานค่าตอบแทนพนักงานจ้างของ สถ. (New e-LAAS) — โปรดตรวจทานยอดกับงานการเงินก่อนบันทึกจริง</div>`
+  <div style="margin-top:10px;font-size:12.5px;color:var(--ink-soft)">หมายเหตุ: รูปแบบรายการเป็นแนวทางการบันทึกบัญชีกรณีปรับฐานค่าตอบแทนพนักงานจ้างโดยทั่วไป — โปรดตรวจทานยอดกับงานการเงินก่อนบันทึกจริง</div>`
   : '<div class="empty">ยังไม่มีข้อมูล</div>';
 }
 /* ตัวเลือกเดือนสิ้นสุดการคำนวณตกเบิก */
@@ -967,7 +1009,7 @@ function renderRetro(){
     opts+=`<option value="${v}" ${v===RETRO_UNTIL?"selected":""}>สิ้นเดือน ${TH_MFULL[last.getMonth()]} ${last.getFullYear()+543} (${fmtDate(isoD(last))})</option>`;
   }
   sel.innerHTML=opts;
-  sel.addEventListener("change",()=>{RETRO_UNTIL=sel.value;renderRetro();});
+  sel.addEventListener("change",()=>{RETRO_UNTIL=sel.value;syncEndMax();renderAll();});
 })();
 
 /* ================= เรนเดอร์ทุกหน้า ================= */
@@ -984,7 +1026,7 @@ function renderD1(){
     <td class="r"><b>${fmt(e.d1.newRate)}</b></td>
     <td class="r">${fmt(livingAllowance(e.d1.newRate))}</td>
     <td>${fmtDate(e.hire)}</td>
-    <td class="nop"><button class="del" title="ลบ" onclick="delEmp(${e.id})">✕</button></td></tr>`).join("")
+    <td class="nop"><button class="del" title="แก้ไข" style="color:var(--blue)" onclick="editEmp(${e.id})">✎</button><button class="del" title="ลบ" onclick="delEmp(${e.id})">✕</button></td></tr>`).join("")
   : `<tr><td colspan="12" class="empty">ยังไม่มีรายชื่อ — กรอกฟอร์มด้านบนแล้วกดเพิ่มลงทะเบียน</td></tr>`;
 }
 function renderD2(){
@@ -998,9 +1040,9 @@ function renderD2(){
     <td>${fmtDate(e.hire)}</td><td class="noprint">${fmtEnd(e)}</td><td class="r">${fmt(e.d2.wage)}</td><td class="r">${fmt(livingAllowance(e.d2.wage))}</td>
     <td class="noprint">${ok?("ช่วงที่ "+r.bracket):"–"}</td>
     <td class="r">${ok?fmt(r.rate):"ไม่ได้ปรับชดเชย"}</td>
-    <td class="r"><b>${fmt(ok?r.got:e.d2.wage)}</b>${ok&&r.capped?' <span class="capnote">ติดเพดาน</span>':''}</td>
+    <td class="r"><b>${fmt(ok?r.got:e.d2.wage)}</b>${ok&&r.capped?' <span class="capnote noprint">ติดเพดาน</span>':''}</td>
     <td class="r">${fmt(livingAllowance(ok?r.got:e.d2.wage))}</td>
-    <td class="nop"><button class="del" title="ลบ" onclick="delEmp(${e.id})">✕</button></td></tr>`;}).join("")
+    <td class="nop"><button class="del" title="แก้ไข" style="color:var(--blue)" onclick="editEmp(${e.id})">✎</button><button class="del" title="ลบ" onclick="delEmp(${e.id})">✕</button></td></tr>`;}).join("")
   : `<tr><td colspan="13" class="empty">ยังไม่มีรายชื่อ — กรอกฟอร์มด้านบนแล้วกดเพิ่มลงทะเบียน</td></tr>`;
 }
 
@@ -1047,7 +1089,7 @@ function renderD4(){
     <td class="r">${fmt(c.base)}</td><td class="r">${fmt(livingAllowance(c.base))}</td>
     <td class="noprint">ช่วงที่ ${r.bracket}</td><td class="r">+${fmt(r.rate)}</td><td class="r noprint">${fmt(r.total)}</td>
     <td class="r noprint">${fmt(r.cap)}</td>
-    <td class="r"><b>${fmt(r.got)}</b>${r.capped?' <span class="capnote">ติดเพดาน</span>':''}</td>
+    <td class="r"><b>${fmt(r.got)}</b>${r.capped?' <span class="capnote noprint">ติดเพดาน</span>':''}</td>
     <td class="r">${fmt(livingAllowance(r.got))}</td></tr>`;}).join("")
   : `<tr><td colspan="15" class="empty">ยังไม่มีผู้เข้าเกณฑ์ — รายชื่อจะปรากฏเมื่อมีข้อมูลในเอกสาร 1/2/3 และอัตราค่าจ้างอยู่ในช่วงเงินปรับปี 2568</td></tr>`;
   renderExcl("d4_excl",exc.map(x=>{
@@ -1103,7 +1145,7 @@ function renderSum(){
     const c4=d4calc(e); const v4 = (c4.res&&c4.res.status==="ok")? fmt(c4.res.got)+(c4.res.capped?" ⚠":"") : "–";
     const t5=d5calc(e); const v5 = t5? (t5.new? fmt(t5.new.newWage)+(t5.new.special>0?" +พิเศษ "+fmtB(t5.new.special):"") : "รอ %") : "–";
     return `<tr>
-    <td>${i+1}</td><td class="l">${esc(e.name)}<br><span class="hint">${esc(e.pos)}</span> ${srcTag(e.src)}</td>
+    <td>${i+1}</td><td class="l">${esc(e.name)}<br><span class="hint">${esc(e.pos)}</span> <span class="noprint">${srcTag(e.src)}</span></td>
     <td>(${e.qual})</td><td>${fmtDate(e.hire)}${e.end?'<br><span class="hint">สิ้นสุด '+fmtDate(e.end)+'</span>':''}</td>
     <td class="r">${fmt(start)}</td><td class="r">${v1}</td><td class="r">${v2}</td>
     <td class="r">${v3}</td><td class="r">${v4}</td><td class="r">${v5}</td>
@@ -1126,18 +1168,35 @@ function delEmp(id){
 }
 
 /* ================= tabs / print / csv ================= */
-document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
+function activateTab(p){
   document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
   document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));
-  t.classList.add("active"); document.getElementById(t.dataset.p).classList.add("active");
-}));
+  const tab=document.querySelector('.tab[data-p="'+p+'"]'); if(tab) tab.classList.add("active");
+  const panel=document.getElementById(p); if(panel) panel.classList.add("active");
+}
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>activateTab(t.dataset.p)));
+/* แก้ไขข้อมูลเอกสาร 1/2: เปิดแท็บที่เกี่ยวข้อง แล้วโหลดข้อมูลกลับเข้าฟอร์ม */
+function editEmp(id){
+  const e=EMP.find(x=>x.id===id); if(!e) return;
+  activateTab(e.src);
+  (e.src==="d1"?window.D1FORM:window.D2FORM).loadForEdit(e);
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+/* ===== วันสิ้นสุดสัญญาห้ามเกินวันคำนวณตกเบิก (RETRO_UNTIL เป็น exclusive = วันที่ 1 ของเดือนถัดไป) ===== */
+function retroEndMaxISO(){ const [y,m]=RETRO_UNTIL.split("-").map(Number); return isoD(new Date(y,m-1,0)); }
+function syncEndMax(){
+  const mx=retroEndMaxISO();
+  if(window.D1FORM) D1FORM.setEndMax(mx);
+  if(window.D2FORM) D2FORM.setEndMax(mx);
+  EMP.forEach(e=>{ if(e.end && e.end>mx) e.end=mx; }); /* ปรับทุกคนที่เกินให้ไม่เกินที่ระบุ */
+}
 document.addEventListener("click",e=>{
   if(e.target.matches("[data-print]")) window.print();
   if(e.target.matches("[data-csv]")) exportCSV(e.target.dataset.csv);
 });
 /* ===== ปรับขนาดตัวอักษรตอนพิมพ์ให้เต็มกรอบ: เริ่มที่ 16pt แล้วย่อตามสัดส่วนถ้าหน้ากระดาษไม่พอ =====
    วัดความกว้างจริงของตาราง (จำลองหน้าพิมพ์ที่ 16pt) เทียบกับความกว้างพื้นที่พิมพ์ A4 แนวนอน */
-const PRINT_MAX_PT=16;
+const PRINT_MAX_PT=16, PRINT_MIN_PT=11; /* เริ่ม 16pt ย่อได้ แต่ไม่ต่ำกว่า 11pt (ถ้าไม่พอจะตัดคำขึ้นบรรทัดใหม่แทน) */
 function fitPrintTables(){
   /* A4 แนวนอน 297mm ลบขอบซ้าย-ขวา (@page margin 12mm) = 273mm ≈ 1031px ที่ 96dpi (พื้นที่พิมพ์) */
   const PRINT_W=(297-24)/25.4*96, SAFE=0.97;
@@ -1148,6 +1207,7 @@ function fitPrintTables(){
     const natural=Math.max(tbl.scrollWidth, tbl.offsetWidth); /* ความกว้างเต็มที่ 16pt */
     let pt=PRINT_MAX_PT;
     if(natural>PRINT_W*SAFE) pt=PRINT_MAX_PT*(PRINT_W*SAFE)/natural;
+    pt=Math.max(PRINT_MIN_PT, Math.min(PRINT_MAX_PT, pt)); /* คุมไม่ให้เล็กเกินไป */
     tbl.style.setProperty("--pfs", pt.toFixed(2)+"pt");
   });
   document.documentElement.classList.remove("measuring");
@@ -1227,7 +1287,7 @@ document.getElementById("fileLoad").addEventListener("change",ev=>{
   rd.onload=()=>{try{
     const d=JSON.parse(rd.result);
     if(!Array.isArray(d.emp)) throw 0;
-    EMP=d.emp; seq=d.seq||EMP.length+1; if(d.logo)setLogo(d.logo); renderAll();
+    EMP=d.emp; seq=d.seq||EMP.length+1; if(d.logo)setLogo(d.logo); syncEndMax(); renderAll();
   }catch{alert("ไฟล์ไม่ถูกต้อง — ต้องเป็นไฟล์ JSON ที่บันทึกจากระบบนี้");}};
   rd.readAsText(f); ev.target.value="";
 });
@@ -1237,7 +1297,7 @@ document.getElementById("btnReset").addEventListener("click",()=>{
 
 
 
-renderAll();
+syncEndMax(); renderAll();
 </script>
 </body>
 </html>
