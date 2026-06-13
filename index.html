@@ -144,8 +144,9 @@ footer{margin-top:30px;text-align:center;font-size:12px;color:var(--ink-soft)}
   header{display:none}
   /* ตารางเต็มหน้ากระดาษ ไม่มีแถบเลื่อน ไม่ถูกตัด */
   .tblwrap{overflow:visible!important}
-  table{min-width:0!important;width:100%!important;font-size:10.5px;table-layout:auto}
-  th,td{padding:3px 4px!important;word-break:break-word}
+  /* --pfs ถูกตั้งโดย JS (fitPrintTables) ก่อนพิมพ์: เริ่มที่ 16pt แล้วย่อตามสัดส่วนให้พอดีหน้ากระดาษ */
+  table{min-width:0!important;width:100%!important;font-size:var(--pfs,16pt);table-layout:auto}
+  th,td{padding:3px 4px!important;word-break:break-word;font-size:var(--pfs,16pt)!important;line-height:1.15}
   td .pct{width:44px}
   tr{page-break-inside:avoid}
   thead{display:table-header-group}
@@ -159,6 +160,11 @@ footer{margin-top:30px;text-align:center;font-size:12px;color:var(--ink-soft)}
   th,td{border:1px solid #555!important}
   td input.pct{border:none;background:none;text-align:center;width:50px}
 }
+/* โหมดวัดความกว้างตารางชั่วคราว (ใช้โดย JS ก่อนพิมพ์) — จำลองหน้าพิมพ์ที่ 16pt เพื่อหาสัดส่วนย่อ */
+html.measuring .panel.active table{font-size:16pt!important;width:auto!important;table-layout:auto!important}
+html.measuring .panel.active table th,html.measuring .panel.active table td{white-space:nowrap!important;word-break:normal!important;padding:3px 4px!important;font-size:16pt!important;line-height:1.15}
+html.measuring .panel.active td input.pct{width:44px!important}
+html.measuring .noprint,html.measuring th.nop,html.measuring td.nop,html.measuring td .del{display:none!important}
 </style>
 </head>
 <body>
@@ -261,7 +267,7 @@ footer{margin-top:30px;text-align:center;font-size:12px;color:var(--ink-soft)}
     <h3>บัญชีรายชื่อเอกสาร 2 <span class="count" id="d2_count">0 ราย</span></h3>
     <div class="tblwrap"><table id="d2_table">
       <thead>
-        <tr><th rowspan="2">ลำดับ</th><th rowspan="2">ชื่อ – สกุล</th><th rowspan="2">ตำแหน่ง</th><th rowspan="2">คุณวุฒิ</th><th rowspan="2">วันที่จ้าง</th><th rowspan="2" class="noprint">สิ้นสุดสัญญา</th>
+        <tr><th rowspan="2">ลำดับ</th><th rowspan="2">ชื่อ – สกุล</th><th rowspan="2">ตำแหน่ง</th><th rowspan="2" class="noprint">คุณวุฒิ</th><th rowspan="2">วันที่จ้าง</th><th rowspan="2" class="noprint">สิ้นสุดสัญญา</th>
         <th colspan="2">อัตราค่าจ้างและเงินเพิ่มการครองชีพ (เดิม)</th>
         <th rowspan="2" class="noprint">ช่วงชดเชย</th><th rowspan="2">อัตราชดเชย</th>
         <th colspan="2">อัตราค่าจ้างและเงินเพิ่มการครองชีพ (ใหม่)</th>
@@ -287,13 +293,12 @@ footer{margin-top:30px;text-align:center;font-size:12px;color:var(--ink-soft)}
     <div class="tblwrap"><table id="d3_table">
       <thead>
         <tr><th rowspan="2">ลำดับ</th><th rowspan="2">ชื่อ – สกุล</th><th rowspan="2">ตำแหน่ง</th>
+        <th rowspan="2">ร้อยละที่<br>ได้เลื่อน</th>
         <th rowspan="2" class="noprint">ที่มา</th><th rowspan="2" class="noprint">คุณวุฒิ</th><th rowspan="2" class="noprint">วันที่จ้าง</th>
-        <th rowspan="2">เงินเดือนก่อนเลื่อน 1 ต.ค. 67<br><span style="font-weight:400;font-size:11px">(เดิม / หลังปรับชดเชย)</span></th>
-        <th rowspan="2">ร้อยละที่ได้เลื่อน</th>
-        <th colspan="3">อัตราค่าจ้างและเงินเพิ่มการครองชีพ (เดิม)</th>
-        <th colspan="3">อัตราค่าจ้างและเงินเพิ่มการครองชีพ (ใหม่)</th></tr>
-        <tr><th>อัตราค่าจ้าง (เดิม)</th><th>ค่าตอบแทนพิเศษ</th><th>เงินเพิ่มการครองชีพฯ</th>
-        <th>อัตราค่าจ้าง (ใหม่)</th><th>ค่าตอบแทนพิเศษ</th><th>เงินเพิ่มการครองชีพฯ</th></tr>
+        <th colspan="5">อัตราค่าจ้างและเงินเพิ่มการครองชีพ (เดิม)</th>
+        <th colspan="5">อัตราค่าจ้างและเงินเพิ่มการครองชีพ (ใหม่)</th></tr>
+        <tr><th>เงินก่อนเลื่อน<br>1 ต.ค. 67</th><th>จำนวนเงิน<br>ที่เลื่อน</th><th>อัตราค่าจ้าง<br>หลังเลื่อน</th><th>ค่าตอบแทนพิเศษ</th><th>เงินเพิ่มการครองชีพฯ</th>
+        <th>เงินก่อนเลื่อน<br>1 ต.ค. 67</th><th>จำนวนเงิน<br>ที่เลื่อน</th><th>อัตราค่าจ้าง<br>หลังเลื่อน</th><th>ค่าตอบแทนพิเศษ</th><th>เงินเพิ่มการครองชีพฯ</th></tr>
       </thead>
       <tbody></tbody>
     </table></div>
@@ -316,9 +321,10 @@ footer{margin-top:30px;text-align:center;font-size:12px;color:var(--ink-soft)}
       <thead>
         <tr><th rowspan="2">ลำดับ</th><th rowspan="2">ชื่อ – สกุล</th><th rowspan="2">ตำแหน่ง</th><th rowspan="2" class="noprint">ที่มา (ฐานค่าจ้าง)</th><th rowspan="2">คุณวุฒิ</th>
         <th colspan="2">อัตราค่าจ้างและเงินเพิ่มการครองชีพ (เดิม)</th>
+        <th colspan="2">อัตราค่าจ้างและเงินเพิ่มการครองชีพ (ปรับใหม่)</th>
         <th rowspan="2" class="noprint">ช่วงชดเชย</th><th rowspan="2">อัตราชดเชย</th><th rowspan="2" class="noprint">รวม</th><th rowspan="2" class="noprint">เพดาน</th>
         <th colspan="2">อัตราค่าจ้างและเงินเพิ่มการครองชีพ (ใหม่)</th></tr>
-        <tr><th>ค่าจ้าง ณ 1 พ.ค. 68</th><th>เงินเพิ่มการครองชีพฯ</th><th>ค่าจ้าง (ใหม่)</th><th>เงินเพิ่มการครองชีพฯ</th></tr>
+        <tr><th>ค่าจ้างเดิม ณ 1 พ.ค. 68</th><th>เงินเพิ่มการครองชีพฯ</th><th>ฐานค่าจ้าง ณ 1 พ.ค. 68</th><th>เงินเพิ่มการครองชีพฯ</th><th>ค่าจ้าง (ใหม่)</th><th>เงินเพิ่มการครองชีพฯ</th></tr>
       </thead>
       <tbody></tbody>
     </table></div>
@@ -340,13 +346,12 @@ footer{margin-top:30px;text-align:center;font-size:12px;color:var(--ink-soft)}
     <div class="tblwrap"><table id="d5_table">
       <thead>
         <tr><th rowspan="2">ลำดับ</th><th rowspan="2">ชื่อ – สกุล</th><th rowspan="2">ตำแหน่ง</th>
+        <th rowspan="2">ร้อยละที่<br>ได้เลื่อน</th>
         <th rowspan="2" class="noprint">ที่มา</th><th rowspan="2" class="noprint">คุณวุฒิ</th><th rowspan="2" class="noprint">วันที่จ้าง</th>
-        <th rowspan="2">เงินเดือนก่อนเลื่อน 1 ต.ค. 68<br><span style="font-weight:400;font-size:11px">(เดิม / หลังปรับชดเชย)</span></th>
-        <th rowspan="2">ร้อยละที่ได้เลื่อน</th>
-        <th colspan="3">อัตราค่าจ้างและเงินเพิ่มการครองชีพ (เดิม)</th>
-        <th colspan="3">อัตราค่าจ้างและเงินเพิ่มการครองชีพ (ใหม่)</th></tr>
-        <tr><th>อัตราค่าจ้าง (เดิม)</th><th>ค่าตอบแทนพิเศษ</th><th>เงินเพิ่มการครองชีพฯ</th>
-        <th>อัตราค่าจ้าง (ใหม่)</th><th>ค่าตอบแทนพิเศษ</th><th>เงินเพิ่มการครองชีพฯ</th></tr>
+        <th colspan="5">อัตราค่าจ้างและเงินเพิ่มการครองชีพ (เดิม)</th>
+        <th colspan="5">อัตราค่าจ้างและเงินเพิ่มการครองชีพ (ใหม่)</th></tr>
+        <tr><th>เงินก่อนเลื่อน<br>1 ต.ค. 68</th><th>จำนวนเงิน<br>ที่เลื่อน</th><th>อัตราค่าจ้าง<br>หลังเลื่อน</th><th>ค่าตอบแทนพิเศษ</th><th>เงินเพิ่มการครองชีพฯ</th>
+        <th>เงินก่อนเลื่อน<br>1 ต.ค. 68</th><th>จำนวนเงิน<br>ที่เลื่อน</th><th>อัตราค่าจ้าง<br>หลังเลื่อน</th><th>ค่าตอบแทนพิเศษ</th><th>เงินเพิ่มการครองชีพฯ</th></tr>
       </thead>
       <tbody></tbody>
     </table></div>
@@ -515,6 +520,8 @@ function calcRaise(wage,pct,ceil){
 }
 const fmt = n => (typeof n==="number"&&isFinite(n)) ? n.toLocaleString("th-TH") : "–";
 const fmtB=n=>(typeof n==="number"&&isFinite(n))?(Math.round(n*100)/100).toLocaleString("th-TH",{minimumFractionDigits:2,maximumFractionDigits:2}):"–";
+/* แสดงจำนวนเต็มแบบไม่มีทศนิยม แต่ถ้ามีเศษ (เช่น จำนวนเงินที่เลื่อนกรณีติดเพดาน) แสดง 2 ตำแหน่ง */
+const fmtA=n=>(typeof n==="number"&&isFinite(n))?(Number.isInteger(n)?fmt(n):fmtB(n)):"–";
 const fmtM=m=>m%1===0? String(m) : m.toFixed(2);
 function esc(s){return String(s??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]))}
 const TH_M=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
@@ -870,7 +877,9 @@ function retroCalc(e){
   const b2 = baseAfterD2(e);
   const p1New = b2!=null? b2 : p1Old;
   const p2New = (t3&&t3.new)? (t3.new.newWage + t3.new.special) : p1New;
-  const p3New = (c4r.res&&c4r.res.status==="ok")? c4r.res.got : ((t3&&t3.new)? t3.new.newWage : p1New);
+  /* ถ้าเอกสาร 4 ปรับชดเชยได้ ใช้ผลเอกสาร 4; ถ้าไม่เข้าเกณฑ์/เกินช่วงชดเชย ให้คงยอดที่ได้รับจริงจากช่วงก่อนหน้า (p2New ซึ่งรวมค่าตอบแทนพิเศษแล้ว)
+     — สำคัญ: ห้ามถอยไปใช้เฉพาะเงินเดือน (ตัดค่าตอบแทนพิเศษทิ้ง) เพราะจะทำให้เส้นใหม่ต่ำกว่าเส้นเดิมและตกเบิกคลาดเคลื่อน/ติดลบ */
+  const p3New = (c4r.res&&c4r.res.status==="ok")? c4r.res.got : p2New;
   const p4New = (t5&&t5.new)? (t5.new.newWage + t5.new.special) : p3New;
   const olds=[p1Old,p2Old,p3Old,p4Old], news=[p1New,p2New,p3New,p4New];
   /* เงินเพิ่มการครองชีพคิดจากเงินเดือนจริง (ไม่รวมค่าตอบแทนพิเศษ) */
@@ -985,7 +994,7 @@ function renderD2(){
   document.querySelector("#d2_table tbody").innerHTML = rows.length? rows.map((e,i)=>{
     const r=e.d2.res, ok=r.status==="ok";
     return `<tr>
-    <td>${i+1}</td><td class="l">${esc(e.name)}</td><td class="l">${esc(e.pos)}</td><td>(${e.qual})</td>
+    <td>${i+1}</td><td class="l">${esc(e.name)}</td><td class="l">${esc(e.pos)}</td><td class="noprint">(${e.qual})</td>
     <td>${fmtDate(e.hire)}</td><td class="noprint">${fmtEnd(e)}</td><td class="r">${fmt(e.d2.wage)}</td><td class="r">${fmt(livingAllowance(e.d2.wage))}</td>
     <td class="noprint">${ok?("ช่วงที่ "+r.bracket):"–"}</td>
     <td class="r">${ok?fmt(r.rate):"ไม่ได้ปรับชดเชย"}</td>
@@ -1001,18 +1010,15 @@ function renderD3(){
   document.getElementById("d3_count").textContent=inc.length+" ราย";
   document.querySelector("#d3_table tbody").innerHTML = inc.length? inc.map((e,i)=>{
     const t=d3calc(e), filled=t.pct!=null;
-    const oW=filled? t.old.newWage : t.oldBase;
-    const oS=filled? t.old.special : 0;
-    const nW=filled? t.new.newWage : t.newBase;
-    const nS=filled? t.new.special : 0;
+    const oW=filled? t.old.newWage : null, oS=filled? t.old.special : 0, oInc=filled? t.old.inc : null;
+    const nW=filled? t.new.newWage : null, nS=filled? t.new.special : 0, nInc=filled? t.new.inc : null;
     return `<tr>
     <td>${i+1}</td><td class="l">${esc(e.name)}</td><td class="l">${esc(e.pos)}</td>
-    <td class="noprint">${srcTag(e.src)}</td><td class="noprint">(${e.qual})</td><td class="noprint">${fmtDate(e.hire)}</td>
-    <td class="r">${fmt(t.oldBase)}${t.oldBase!==t.newBase?' / '+fmt(t.newBase):''}</td>
     <td><input class="pct" type="number" min="0" max="10" step="0.01" placeholder="%" value="${e.pct3??""}" onchange="setPct(${e.id},'pct3',this.value)"></td>
-    <td class="r">${filled?fmt(oW):"–"}</td><td class="r">${filled&&oS>0?fmtB(oS):"–"}</td><td class="r">${filled?fmt(livingAllowance(oW)):"–"}</td>
-    <td class="r"><b>${filled?fmt(nW):"–"}</b>${filled&&t.new.capped?' <span class="capnote">เต็มขั้น</span>':''}</td><td class="r">${filled&&nS>0?fmtB(nS):"–"}</td><td class="r">${filled?fmt(livingAllowance(nW)):"–"}</td></tr>`;}).join("")
-  : `<tr><td colspan="14" class="empty">ยังไม่มีผู้เข้าเกณฑ์ — เพิ่มรายชื่อในเอกสาร 1 หรือ 2 ก่อน (ต้องจ้างภายใน 1 ก.พ. 2567)</td></tr>`;
+    <td class="noprint">${srcTag(e.src)}</td><td class="noprint">(${e.qual})</td><td class="noprint">${fmtDate(e.hire)}</td>
+    <td class="r">${fmt(t.oldBase)}</td><td class="r">${filled?fmtA(oInc):"–"}</td><td class="r"><b>${filled?fmt(oW):"–"}</b></td><td class="r">${oS>0?fmtB(oS):"–"}</td><td class="r">${filled?fmt(livingAllowance(oW)):"–"}</td>
+    <td class="r">${fmt(t.newBase)}</td><td class="r">${filled?fmtA(nInc):"–"}</td><td class="r"><b>${filled?fmt(nW):"–"}</b>${filled&&t.new.capped?' <span class="capnote">เต็มขั้น</span>':''}</td><td class="r">${nS>0?fmtB(nS):"–"}</td><td class="r">${filled?fmt(livingAllowance(nW)):"–"}</td></tr>`;}).join("")
+  : `<tr><td colspan="17" class="empty">ยังไม่มีผู้เข้าเกณฑ์ — เพิ่มรายชื่อในเอกสาร 1 หรือ 2 ก่อน (ต้องจ้างภายใน 1 ก.พ. 2567)</td></tr>`;
   renderExcl("d3_excl",exc.map(e=>{
     const m=monthsInWindow(e.hire,FY67[0],FY67[1]);
     let why;
@@ -1031,15 +1037,19 @@ function renderD4(){
   document.getElementById("d4_count").textContent=inc.length+" ราย";
   document.querySelector("#d4_table tbody").innerHTML = inc.length? inc.map((x,i)=>{
     const {e,c}=x, r=c.res;
+    /* เดิม (จริง) = อัตราตามเส้นเดิม ณ 1 พ.ค. 68: ค่าที่กรอก + เลื่อนปกติเอกสาร 3 (ถ้ามี) แต่ยังไม่ผ่านการปรับชดเชย
+       ปรับใหม่ = ฐานที่ใช้คิดปรับชดเชย (ผ่านกระบวนการก่อนหน้ามาแล้ว = c.base) */
+    const realOld=oldWageFor5(e);
     return `<tr>
     <td>${i+1}</td><td class="l">${esc(e.name)}</td><td class="l">${esc(e.pos)}</td>
     <td class="noprint">${srcTag(c.from)}</td><td>(${e.qual})</td>
+    <td class="r">${fmt(realOld)}</td><td class="r">${fmt(livingAllowance(realOld))}</td>
     <td class="r">${fmt(c.base)}</td><td class="r">${fmt(livingAllowance(c.base))}</td>
     <td class="noprint">ช่วงที่ ${r.bracket}</td><td class="r">+${fmt(r.rate)}</td><td class="r noprint">${fmt(r.total)}</td>
     <td class="r noprint">${fmt(r.cap)}</td>
     <td class="r"><b>${fmt(r.got)}</b>${r.capped?' <span class="capnote">ติดเพดาน</span>':''}</td>
     <td class="r">${fmt(livingAllowance(r.got))}</td></tr>`;}).join("")
-  : `<tr><td colspan="13" class="empty">ยังไม่มีผู้เข้าเกณฑ์ — รายชื่อจะปรากฏเมื่อมีข้อมูลในเอกสาร 1/2/3 และอัตราค่าจ้างอยู่ในช่วงเงินปรับปี 2568</td></tr>`;
+  : `<tr><td colspan="15" class="empty">ยังไม่มีผู้เข้าเกณฑ์ — รายชื่อจะปรากฏเมื่อมีข้อมูลในเอกสาร 1/2/3 และอัตราค่าจ้างอยู่ในช่วงเงินปรับปี 2568</td></tr>`;
   renderExcl("d4_excl",exc.map(x=>{
     let why;
     if(x.c.skip) why=x.c.skip;
@@ -1055,18 +1065,15 @@ function renderD5(){
   document.getElementById("d5_count").textContent=inc.length+" ราย";
   document.querySelector("#d5_table tbody").innerHTML = inc.length? inc.map((e,i)=>{
     const t=d5calc(e), filled=t.pct!=null;
-    const oW=filled? t.old.newWage : t.oldBase;
-    const oS=filled? t.old.special : 0;
-    const nW=filled? t.new.newWage : t.newBase;
-    const nS=filled? t.new.special : 0;
+    const oW=filled? t.old.newWage : null, oS=filled? t.old.special : 0, oInc=filled? t.old.inc : null;
+    const nW=filled? t.new.newWage : null, nS=filled? t.new.special : 0, nInc=filled? t.new.inc : null;
     return `<tr>
     <td>${i+1}</td><td class="l">${esc(e.name)}</td><td class="l">${esc(e.pos)}</td>
-    <td class="noprint">${srcTag(t.from)}</td><td class="noprint">(${e.qual})</td><td class="noprint">${fmtDate(e.hire)}</td>
-    <td class="r">${fmt(t.oldBase)}${t.oldBase!==t.newBase?' / '+fmt(t.newBase):''}</td>
     <td><input class="pct" type="number" min="0" max="10" step="0.01" placeholder="%" value="${e.pct5??""}" onchange="setPct(${e.id},'pct5',this.value)"></td>
-    <td class="r">${filled?fmt(oW):"–"}</td><td class="r">${filled&&oS>0?fmtB(oS):"–"}</td><td class="r">${filled?fmt(livingAllowance(oW)):"–"}</td>
-    <td class="r"><b>${filled?fmt(nW):"–"}</b>${filled&&t.new.capped?' <span class="capnote">เต็มขั้น</span>':''}</td><td class="r">${filled&&nS>0?fmtB(nS):"–"}</td><td class="r">${filled?fmt(livingAllowance(nW)):"–"}</td></tr>`;}).join("")
-  : `<tr><td colspan="14" class="empty">ยังไม่มีผู้เข้าเกณฑ์ — รายชื่อมาจากเอกสาร 1 หรือเอกสาร 4 ที่จ้างภายใน 1 ก.พ. 2568</td></tr>`;
+    <td class="noprint">${srcTag(t.from)}</td><td class="noprint">(${e.qual})</td><td class="noprint">${fmtDate(e.hire)}</td>
+    <td class="r">${fmt(t.oldBase)}</td><td class="r">${filled?fmtA(oInc):"–"}</td><td class="r"><b>${filled?fmt(oW):"–"}</b></td><td class="r">${oS>0?fmtB(oS):"–"}</td><td class="r">${filled?fmt(livingAllowance(oW)):"–"}</td>
+    <td class="r">${fmt(t.newBase)}</td><td class="r">${filled?fmtA(nInc):"–"}</td><td class="r"><b>${filled?fmt(nW):"–"}</b>${filled&&t.new.capped?' <span class="capnote">เต็มขั้น</span>':''}</td><td class="r">${nS>0?fmtB(nS):"–"}</td><td class="r">${filled?fmt(livingAllowance(nW)):"–"}</td></tr>`;}).join("")
+  : `<tr><td colspan="17" class="empty">ยังไม่มีผู้เข้าเกณฑ์ — รายชื่อมาจากเอกสาร 1 หรือเอกสาร 4 ที่จ้างภายใน 1 ก.พ. 2568</td></tr>`;
   renderExcl("d5_excl",exc.map(e=>{
     const m=monthsInWindow(e.hire,FY68[0],FY68[1]);
     let why;
@@ -1128,6 +1135,24 @@ document.addEventListener("click",e=>{
   if(e.target.matches("[data-print]")) window.print();
   if(e.target.matches("[data-csv]")) exportCSV(e.target.dataset.csv);
 });
+/* ===== ปรับขนาดตัวอักษรตอนพิมพ์ให้เต็มกรอบ: เริ่มที่ 16pt แล้วย่อตามสัดส่วนถ้าหน้ากระดาษไม่พอ =====
+   วัดความกว้างจริงของตาราง (จำลองหน้าพิมพ์ที่ 16pt) เทียบกับความกว้างพื้นที่พิมพ์ A4 แนวนอน */
+const PRINT_MAX_PT=16;
+function fitPrintTables(){
+  /* A4 แนวนอน 297mm ลบขอบซ้าย-ขวา (@page margin 12mm) = 273mm ≈ 1031px ที่ 96dpi (พื้นที่พิมพ์) */
+  const PRINT_W=(297-24)/25.4*96, SAFE=0.97;
+  const tables=document.querySelectorAll(".panel.active table");
+  document.documentElement.classList.add("measuring");
+  tables.forEach(tbl=>{
+    tbl.style.removeProperty("--pfs");
+    const natural=Math.max(tbl.scrollWidth, tbl.offsetWidth); /* ความกว้างเต็มที่ 16pt */
+    let pt=PRINT_MAX_PT;
+    if(natural>PRINT_W*SAFE) pt=PRINT_MAX_PT*(PRINT_W*SAFE)/natural;
+    tbl.style.setProperty("--pfs", pt.toFixed(2)+"pt");
+  });
+  document.documentElement.classList.remove("measuring");
+}
+window.addEventListener("beforeprint",fitPrintTables);
 function exportCSV(id){
   let head,rows;
   const SRC={d1:"เอกสาร 1",d2:"เอกสาร 2",d3:"เอกสาร 3",d4:"เอกสาร 4"};
@@ -1142,19 +1167,27 @@ function exportCSV(id){
       return [i+1,e.name,e.pos,"("+e.qual+")",fmtDate(e.hire),fmtEnd(e),e.d2.wage,livingAllowance(e.d2.wage),ok?"ช่วงที่ "+r.bracket:"-",ok?r.rate:"ไม่ได้ปรับชดเชย",ok?r.got:e.d2.wage,livingAllowance(ok?r.got:e.d2.wage)];});
   }else if(id==="d3"){
     const L=EMP.filter(elig3);
-    head=["ลำดับ","ชื่อ-สกุล","ตำแหน่ง","ที่มา","คุณวุฒิ","วันที่จ้าง","เงินเดือนเดิม","เงินเดือนหลังปรับชดเชย","ร้อยละ","ค่าจ้างใหม่","ค่าตอบแทนพิเศษ"];
-    rows=L.map((e,i)=>{const t=d3calc(e);
-      return [i+1,e.name,e.pos,SRC[e.src],"("+e.qual+")",fmtDate(e.hire),t.oldBase,t.newBase,t.pct??"-",t.new?t.new.newWage:"-",t.new?t.new.special:"-"];});
+    head=["ลำดับ","ชื่อ-สกุล","ตำแหน่ง","ร้อยละ","ที่มา","คุณวุฒิ","วันที่จ้าง",
+      "เงินก่อนเลื่อน(เดิม)","จำนวนเงินที่เลื่อน(เดิม)","อัตราค่าจ้างหลังเลื่อน(เดิม)","ค่าตอบแทนพิเศษ(เดิม)","ครองชีพ(เดิม)",
+      "เงินก่อนเลื่อน(ใหม่)","จำนวนเงินที่เลื่อน(ใหม่)","อัตราค่าจ้างหลังเลื่อน(ใหม่)","ค่าตอบแทนพิเศษ(ใหม่)","ครองชีพ(ใหม่)"];
+    rows=L.map((e,i)=>{const t=d3calc(e),f=t.pct!=null;
+      return [i+1,e.name,e.pos,t.pct??"-",SRC[e.src],"("+e.qual+")",fmtDate(e.hire),
+        t.oldBase,f?t.old.inc:"-",f?t.old.newWage:"-",f?t.old.special:"-",f?livingAllowance(t.old.newWage):"-",
+        t.newBase,f?t.new.inc:"-",f?t.new.newWage:"-",f?t.new.special:"-",f?livingAllowance(t.new.newWage):"-"];});
   }else if(id==="d4"){
     const L=EMP.map(e=>({e,c:d4calc(e)})).filter(x=>x.c.res&&x.c.res.status==="ok");
-    head=["ลำดับ","ชื่อ-สกุล","ตำแหน่ง","ที่มา","คุณวุฒิ","ฐานค่าจ้าง 1พค68","ครองชีพเดิม","ช่วงชดเชย","อัตราชดเชย","รวม","เพดาน","ค่าจ้างใหม่","ครองชีพใหม่"];
-    rows=L.map((x,i)=>{const{e,c}=x,r=c.res;
-      return [i+1,e.name,e.pos,SRC[c.from],"("+e.qual+")",c.base,livingAllowance(c.base),"ช่วงที่ "+r.bracket,r.rate,r.total,r.cap,r.got,livingAllowance(r.got)];});
+    head=["ลำดับ","ชื่อ-สกุล","ตำแหน่ง","ที่มา","คุณวุฒิ","ค่าจ้างเดิม 1พค68(จริง)","ครองชีพเดิม","ฐานปรับใหม่ 1พค68","ครองชีพปรับใหม่","ช่วงชดเชย","อัตราชดเชย","รวม","เพดาน","ค่าจ้างใหม่","ครองชีพใหม่"];
+    rows=L.map((x,i)=>{const{e,c}=x,r=c.res,realOld=oldWageFor5(e);
+      return [i+1,e.name,e.pos,SRC[c.from],"("+e.qual+")",realOld,livingAllowance(realOld),c.base,livingAllowance(c.base),"ช่วงที่ "+r.bracket,r.rate,r.total,r.cap,r.got,livingAllowance(r.got)];});
   }else if(id==="d5"){
     const L=EMP.filter(elig5);
-    head=["ลำดับ","ชื่อ-สกุล","ตำแหน่ง","ที่มา","คุณวุฒิ","วันที่จ้าง","เงินเดือนเดิม","เงินเดือนหลังปรับชดเชย","ร้อยละ","ค่าจ้างใหม่","ค่าตอบแทนพิเศษ"];
-    rows=L.map((e,i)=>{const t=d5calc(e);
-      return [i+1,e.name,e.pos,SRC[t.from],"("+e.qual+")",fmtDate(e.hire),t.oldBase,t.newBase,t.pct??"-",t.new?t.new.newWage:"-",t.new?t.new.special:"-"];});
+    head=["ลำดับ","ชื่อ-สกุล","ตำแหน่ง","ร้อยละ","ที่มา","คุณวุฒิ","วันที่จ้าง",
+      "เงินก่อนเลื่อน(เดิม)","จำนวนเงินที่เลื่อน(เดิม)","อัตราค่าจ้างหลังเลื่อน(เดิม)","ค่าตอบแทนพิเศษ(เดิม)","ครองชีพ(เดิม)",
+      "เงินก่อนเลื่อน(ใหม่)","จำนวนเงินที่เลื่อน(ใหม่)","อัตราค่าจ้างหลังเลื่อน(ใหม่)","ค่าตอบแทนพิเศษ(ใหม่)","ครองชีพ(ใหม่)"];
+    rows=L.map((e,i)=>{const t=d5calc(e),f=t.pct!=null;
+      return [i+1,e.name,e.pos,t.pct??"-",SRC[t.from],"("+e.qual+")",fmtDate(e.hire),
+        t.oldBase,f?t.old.inc:"-",f?t.old.newWage:"-",f?t.old.special:"-",f?livingAllowance(t.old.newWage):"-",
+        t.newBase,f?t.new.inc:"-",f?t.new.newWage:"-",f?t.new.special:"-",f?livingAllowance(t.new.newWage):"-"];});
   }else if(id==="retro"){
     const P=retroPeriods();
     head=["ลำดับ","ชื่อ-สกุล","ตำแหน่ง",...P.map(p=>"สุทธิ "+p.label),"จ่ายคืนรวม","เรียกคืนรวม","เงินตกเบิกสุทธิ"];
