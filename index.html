@@ -218,7 +218,7 @@ footer{margin-top:30px;text-align:center;font-size:12px;color:var(--ink-soft)}
     <h3>บัญชีรายชื่อเอกสาร 1 <span class="count" id="d1_count">0 ราย</span></h3>
     <div class="tblwrap"><table id="d1_table">
       <thead>
-        <tr><th rowspan="2">ลำดับ</th><th rowspan="2">ชื่อ – สกุล</th><th rowspan="2">ตำแหน่ง</th><th rowspan="2">คุณวุฒิ</th><th rowspan="2">วันที่จ้างและทำสัญญาจ้าง</th><th rowspan="2" class="noprint">สิ้นสุดสัญญา</th><th rowspan="2" class="noprint">จ้างตั้งแต่</th>
+        <tr><th rowspan="2">ลำดับ</th><th rowspan="2">ชื่อ – สกุล</th><th rowspan="2">ตำแหน่ง</th><th rowspan="2">คุณวุฒิ</th><th rowspan="2">วันที่จ้างและทำสัญญาจ้าง</th><th rowspan="2" class="noprint">สิ้นสุดสัญญา</th>
         <th colspan="2">อัตราค่าจ้างและเงินเพิ่มการครองชีพ (เดิม)</th>
         <th colspan="2">อัตราค่าจ้างและเงินเพิ่มการครองชีพ (ใหม่)</th>
         <th rowspan="2">มีผล ณ วันที่</th><th rowspan="2" class="nop"></th></tr>
@@ -970,13 +970,13 @@ function renderD1(){
   document.getElementById("d1_count").textContent=rows.length+" ราย";
   document.querySelector("#d1_table tbody").innerHTML = rows.length? rows.map((e,i)=>`<tr>
     <td>${i+1}</td><td class="l">${esc(e.name)}</td><td class="l">${esc(e.pos)}</td><td>(${e.qual})</td>
-    <td>${fmtDate(e.hire)}</td><td class="noprint">${fmtEnd(e)}</td><td class="noprint">ปี ${e.d1.yearCode===1?2567:2568}</td>
+    <td>${fmtDate(e.hire)}</td><td class="noprint">${fmtEnd(e)}</td>
     <td class="r">${fmt(e.d1.oldRate)}</td><td class="r">${fmt(livingAllowance(e.d1.oldRate))}</td>
     <td class="r"><b>${fmt(e.d1.newRate)}</b></td>
     <td class="r">${fmt(livingAllowance(e.d1.newRate))}</td>
     <td>${fmtDate(e.hire)}</td>
     <td class="nop"><button class="del" title="ลบ" onclick="delEmp(${e.id})">✕</button></td></tr>`).join("")
-  : `<tr><td colspan="13" class="empty">ยังไม่มีรายชื่อ — กรอกฟอร์มด้านบนแล้วกดเพิ่มลงทะเบียน</td></tr>`;
+  : `<tr><td colspan="12" class="empty">ยังไม่มีรายชื่อ — กรอกฟอร์มด้านบนแล้วกดเพิ่มลงทะเบียน</td></tr>`;
 }
 function renderD2(){
   const rows=EMP.filter(e=>e.src==="d2");
@@ -1133,8 +1133,8 @@ function exportCSV(id){
   const SRC={d1:"เอกสาร 1",d2:"เอกสาร 2",d3:"เอกสาร 3",d4:"เอกสาร 4"};
   if(id==="d1"){
     const L=EMP.filter(e=>e.src==="d1");
-    head=["ลำดับ","ชื่อ-สกุล","ตำแหน่ง","คุณวุฒิ","วันที่จ้างและทำสัญญาจ้าง","สิ้นสุดสัญญา","จ้างตั้งแต่","อัตราค่าจ้าง (เดิม)","ค่าครองชีพชั่วคราว (เดิม)","อัตราค่าจ้างใหม่","ค่าครองชีพ (ใหม่)","มีผล ณ วันที่"];
-    rows=L.map((e,i)=>[i+1,e.name,e.pos,"("+e.qual+")",fmtDate(e.hire),fmtEnd(e),"ปี "+(e.d1.yearCode===1?2567:2568),e.d1.oldRate,livingAllowance(e.d1.oldRate),e.d1.newRate,livingAllowance(e.d1.newRate),fmtDate(e.hire)]);
+    head=["ลำดับ","ชื่อ-สกุล","ตำแหน่ง","คุณวุฒิ","วันที่จ้างและทำสัญญาจ้าง","สิ้นสุดสัญญา","อัตราค่าจ้าง (เดิม)","ค่าครองชีพชั่วคราว (เดิม)","อัตราค่าจ้างใหม่","ค่าครองชีพ (ใหม่)","มีผล ณ วันที่"];
+    rows=L.map((e,i)=>[i+1,e.name,e.pos,"("+e.qual+")",fmtDate(e.hire),fmtEnd(e),e.d1.oldRate,livingAllowance(e.d1.oldRate),e.d1.newRate,livingAllowance(e.d1.newRate),fmtDate(e.hire)]);
   }else if(id==="d2"){
     const L=EMP.filter(e=>e.src==="d2");
     head=["ลำดับ","ชื่อ-สกุล","ตำแหน่ง","คุณวุฒิ","วันที่จ้าง","สิ้นสุดสัญญา","ค่าจ้าง 1พค67","ครองชีพเดิม","ช่วงชดเชย","อัตราชดเชย","ค่าจ้าง (ใหม่)","ครองชีพใหม่"];
