@@ -24,8 +24,10 @@ body{font-family:'Sarabun',sans-serif;background:var(--paper);color:var(--ink);f
 .wrap{max-width:1180px;margin:0 auto;padding:26px 20px 60px}
 
 header{text-align:center;padding:14px 0 20px;border-bottom:3px double var(--gold);margin-bottom:16px;position:relative}
-header .emblem{width:64px;height:64px;border:2px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-family:'Bai Jamjuree';font-weight:700;color:var(--gold);font-size:12px;overflow:hidden;cursor:pointer;background:#fff}
-header .emblem img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+header .emblem{width:180px;height:180px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;font-family:'Bai Jamjuree';font-weight:700;color:var(--gold);font-size:13px;cursor:pointer}
+header .emblem img{max-width:100%;max-height:100%;object-fit:contain}
+header .emblem #emblemTxt:not([hidden]){border:2px solid var(--gold);border-radius:50%;width:96px;height:96px;display:flex;align-items:center;justify-content:center;background:#fff}
+@media(max-width:780px){header .emblem{width:130px;height:130px}}
 .tab.green{background:#DFF0E4;color:#1F7A4D;border-color:#BFDCC9}
 .tab.green:hover{background:#E9F5EC}
 .tab.green.active{background:var(--card);color:#1F7A4D;border-color:var(--line)}
@@ -36,6 +38,7 @@ td input.pct,#retro_until{background:#F0F8F2;border-color:#BFDCC9}
 .printhead{display:none}
 header h1{font-family:'Bai Jamjuree',sans-serif;font-weight:700;font-size:24px}
 header p{color:var(--ink-soft);font-size:13.5px;margin-top:3px}
+header .byline{font-family:'Bai Jamjuree',sans-serif;font-weight:600;color:var(--gold);font-size:14.5px;margin-top:4px}
 .databar{display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap}
 .databar button{font-family:'Sarabun';font-size:12.5px;padding:5px 12px;border:1px solid var(--line);background:#fff;border-radius:6px;cursor:pointer;color:var(--ink-soft)}
 .databar button:hover{border-color:var(--gold);color:var(--ink)}
@@ -174,9 +177,10 @@ html.measuring .noprint,html.measuring th.nop,html.measuring td.nop,html.measuri
 <div class="wrap">
 
 <header>
-  <div class="emblem" id="emblem" title="คลิกเพื่อใส่รูปโลโก้"><span id="emblemTxt">โลโก้</span><img id="emblemImg" alt="โลโก้" hidden></div>
+  <div class="emblem" id="emblem" title="คลิกเพื่อเปลี่ยนรูปโลโก้"><span id="emblemTxt" hidden>โลโก้</span><img id="emblemImg" alt="โลโก้"></div>
   <input type="file" id="emblemFile" accept="image/*" hidden>
   <h1>ระบบคำนวณปรับชดเชยค่าตอบแทนพนักงานจ้าง</h1>
+  <p class="byline">จัดทำโดย ดร.วุฒิวิชญ์ ราชมณี</p>
   <div class="databar">
     <button id="btnSave">💾 บันทึกข้อมูลเป็นไฟล์ (JSON)</button>
     <button id="btnLoad">📂 เปิดไฟล์ข้อมูลที่บันทึกไว้</button>
@@ -592,11 +596,13 @@ const fmtEnd = e => e.end? fmtDate(e.end) : "ปัจจุบัน";
 
 /* ================= โลโก้ ================= */
 let LOGO="";
+const DEFAULT_LOGO="assets/logo.jpg"; /* โลโก้เริ่มต้น โหลดอัตโนมัติทุกครั้งจากไฟล์ในโปรเจกต์ */
 function setLogo(dataURL){
   LOGO=dataURL||"";
   const img=document.getElementById("emblemImg"), txt=document.getElementById("emblemTxt");
-  if(LOGO){img.src=LOGO;img.hidden=false;txt.hidden=true;}
-  else{img.hidden=true;txt.hidden=false;}
+  /* ใช้รูปที่ผู้ใช้อัปโหลดถ้ามี ไม่งั้นใช้โลโก้เริ่มต้น; ถ้าหาไฟล์ไม่เจอจึงค่อยแสดงข้อความ "โลโก้" */
+  img.onerror=()=>{ img.hidden=true; txt.hidden=false; };
+  img.src=LOGO||DEFAULT_LOGO; img.hidden=false; txt.hidden=true;
 }
 document.getElementById("emblem").addEventListener("click",()=>document.getElementById("emblemFile").click());
 document.getElementById("emblemFile").addEventListener("change",ev=>{
@@ -605,6 +611,7 @@ document.getElementById("emblemFile").addEventListener("change",ev=>{
   rd.onload=()=>setLogo(rd.result);
   rd.readAsDataURL(f); ev.target.value="";
 });
+setLogo(""); /* โหลดโลโก้เริ่มต้นทันทีเมื่อเปิดหน้า */
 
 /* ================= ทะเบียนพนักงานกลาง ================= */
 /* emp = {id,name,pos,qual,hire,src:'d1'|'d2', d1:{yearCode,oldRate,newRate}, d2:{wage,res},
