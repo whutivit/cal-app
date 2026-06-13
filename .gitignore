@@ -1,0 +1,16 @@
+# dependencies (ไม่มีการใช้งานจริง แต่กันเผื่อไว้)
+node_modules/
+
+# vercel
+.vercel/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/
+
+# ไฟล์ข้อมูลที่ผู้ใช้ export ออกมา (ไม่ควร commit)
+ข้อมูลพนักงานจ้าง_อปท*.json
+บัญชี_*.csv
