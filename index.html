@@ -596,7 +596,7 @@ const fmtEnd = e => e.end? fmtDate(e.end) : "ปัจจุบัน";
 
 /* ================= โลโก้ ================= */
 let LOGO="";
-const DEFAULT_LOGO="assets/logo.jpg"; /* โลโก้เริ่มต้น โหลดอัตโนมัติทุกครั้งจากไฟล์ในโปรเจกต์ */
+const DEFAULT_LOGO="assets/logo.png"; /* โลโก้เริ่มต้น (พื้นหลังโปร่งใส) โหลดอัตโนมัติทุกครั้งจากไฟล์ในโปรเจกต์ */
 function setLogo(dataURL){
   LOGO=dataURL||"";
   const img=document.getElementById("emblemImg"), txt=document.getElementById("emblemTxt");
