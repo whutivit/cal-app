@@ -1278,9 +1278,16 @@ function tableData(id){
         latestWage(e),Math.round(retroTotals(e).net*100)/100];});
   }
   let sheets;
-  if(id==="retro") sheets=[retroAggSheet(), {name:SHEET_NAMES.retro,head,rows}, retroJournalSheet()];
-  else sheets=[{name:SHEET_NAMES[id]||"ข้อมูล",head,rows}];
+  if(id==="retro") sheets=[retroAggSheet(), {name:SHEET_NAMES.retro,head,rows,title:["เงินตกเบิกรายบุคคล"]}, retroJournalSheet()];
+  else sheets=[{name:SHEET_NAMES[id]||"ข้อมูล",head,rows,title:docTitle(id)}];
   return {id, filename:(SHEET_NAMES[id]||("บัญชี_"+id)), sheets};
+}
+/* หัวเรื่องเอกสาร (บัญชีรายละเอียด...) — อ่านจาก .printhead ที่แสดงตอนพิมพ์ ให้ตรงกับ PDF */
+function docTitle(id){
+  const ph=document.querySelector("#"+id+" .printhead");
+  if(ph){ const lines=[...ph.children].map(d=>d.textContent.trim()).filter(Boolean); if(lines.length) return lines; }
+  const F={sum:["สรุปเส้นทางค่าตอบแทนรายบุคคล"]};
+  return F[id]||[];
 }
 /* ตกเบิก: ตารางรวมตามช่วงเวลา (คำนวณเหมือน renderRetro) */
 function retroAggSheet(){
@@ -1288,7 +1295,7 @@ function retroAggSheet(){
   const head=["ช่วงเวลา","จำนวนคน","เดิม ค่าตอบแทน","เดิม ค่าครองชีพ","เดิม รวม","ใหม่ ค่าตอบแทน","ใหม่ ค่าครองชีพ","ใหม่ รวม","รวมตกเบิกสุทธิ","เรียกคืนค่าครองชีพ","จ่ายคืน"];
   const rows=P.map((p,i)=>{let cnt=0,o=0,oa=0,n=0,na=0,pay=0,claw=0;all.forEach(x=>{const r=x.rows[i];if(r.m>0){cnt++;o+=r.o;oa+=r.oa;n+=r.n;na+=r.na;}pay+=r.pay;claw+=r.claw;});
     return [p.label,cnt,r2(o),r2(oa),r2(o+oa),r2(n),r2(na),r2(n+na),r2(pay-claw),r2(claw),r2(pay)];});
-  return {name:"รวมตามช่วงเวลา",head,rows};
+  return {name:"รวมตามช่วงเวลา",head,rows,title:["ตารางรวมทุกคน แยกตามช่วงเวลา"]};
 }
 /* ตกเบิก: แนวทางบันทึกบัญชี (อ่านจากที่เรนเดอร์ไว้) */
 function retroJournalSheet(){
@@ -1298,7 +1305,7 @@ function retroJournalSheet(){
     else if(node.classList.contains("jrow")){ const sp=node.querySelectorAll("span"); const amt=parseFloat((sp[1]?sp[1].textContent:"").replace(/,/g,"")); rows.push([sp[0]?sp[0].textContent.trim():"", isFinite(amt)?amt:(sp[1]?sp[1].textContent.trim():"")]); }
     else { const t=node.textContent.trim(); if(t) rows.push([t,""]); }
   });
-  return {name:"บันทึกบัญชี",head,rows};
+  return {name:"บันทึกบัญชี",head,rows,title:["แนวทางการบันทึกบัญชี"]};
 }
 function exportCSV(id){
   if(!EMP.length){alert("ยังไม่มีรายชื่อในหน้านี้");return;}
@@ -1330,16 +1337,21 @@ function _zip(files){
 }
 function _xmlEsc(s){return String(s==null?"":s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));}
 function _colName(n){let s="";while(n>0){const m=(n-1)%26;s=String.fromCharCode(65+m)+s;n=(n-1-m)/26;}return s;}
-function _sheetXml(head,rows){
-  const cell=(r,c,v,hdr)=>{const ref=_colName(c)+r; if(typeof v==="number"&&isFinite(v))return `<c r="${ref}"${hdr?' s="1"':''}><v>${v}</v></c>`;
-    return `<c r="${ref}"${hdr?' s="1"':''} t="inlineStr"><is><t xml:space="preserve">${_xmlEsc(v)}</t></is></c>`;};
+function _sheetXml(head,rows,title){
+  title=title||[]; const ncol=Math.max(1,head.length);
+  const cell=(r,c,v,st)=>{const ref=_colName(c)+r; const s=st?` s="${st}"`:''; if(typeof v==="number"&&isFinite(v))return `<c r="${ref}"${s}><v>${v}</v></c>`;
+    return `<c r="${ref}"${s} t="inlineStr"><is><t xml:space="preserve">${_xmlEsc(v)}</t></is></c>`;};
   let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>';
-  x+='<row r="1">'+head.map((h,j)=>cell(1,j+1,h,true)).join("")+'</row>';
-  rows.forEach((row,ri)=>{ x+=`<row r="${ri+2}">`+row.map((v,j)=>cell(ri+2,j+1,v,false)).join("")+"</row>"; });
-  return x+"</sheetData></worksheet>";
+  let rn=1;
+  title.forEach((line,ti)=>{ x+=`<row r="${rn}">`+cell(rn,1,line,ti===0?2:3)+"</row>"; rn++; }); /* หัวเรื่องเอกสาร (รวมเซลล์ทั้งแถว) */
+  x+=`<row r="${rn}">`+head.map((h,j)=>cell(rn,j+1,h,1)).join("")+"</row>"; rn++;
+  rows.forEach(row=>{ x+=`<row r="${rn}">`+row.map((v,j)=>cell(rn,j+1,v,0)).join("")+"</row>"; rn++; });
+  x+="</sheetData>";
+  if(title.length && ncol>1){ x+=`<mergeCells count="${title.length}">`; title.forEach((line,ti)=>{ x+=`<mergeCell ref="A${ti+1}:${_colName(ncol)}${ti+1}"/>`; }); x+="</mergeCells>"; }
+  return x+"</worksheet>";
 }
 function _tabName(n,i){return _xmlEsc(String(n||("Sheet"+(i+1))).replace(/[\\\/\?\*\[\]:]/g," ").slice(0,31));}
-const _STYLES='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Tahoma"/></font><font><b/><sz val="11"/><name val="Tahoma"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
+const _STYLES='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="3"><font><sz val="11"/><name val="Tahoma"/></font><font><b/><sz val="11"/><name val="Tahoma"/></font><font><b/><sz val="14"/><name val="Tahoma"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="4"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1" applyAlignment="1"><alignment horizontal="center"/></xf><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0" applyAlignment="1"><alignment horizontal="center"/></xf></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
 function buildXlsx(sheets){
   const enc=new TextEncoder(), files=[], add=(n,s)=>files.push({name:n,data:enc.encode(s)});
   let ct='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>';
@@ -1353,7 +1365,7 @@ function buildXlsx(sheets){
   sheets.forEach((s,i)=>wr+=`<Relationship Id="rId${i+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i+1}.xml"/>`);
   wr+=`<Relationship Id="rId${sheets.length+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`;
   add("xl/_rels/workbook.xml.rels",wr); add("xl/styles.xml",_STYLES);
-  sheets.forEach((s,i)=>add(`xl/worksheets/sheet${i+1}.xml`,_sheetXml(s.head,s.rows)));
+  sheets.forEach((s,i)=>add(`xl/worksheets/sheet${i+1}.xml`,_sheetXml(s.head,s.rows,s.title)));
   return _zip(files);
 }
 function exportXlsx(id){
