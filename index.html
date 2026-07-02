@@ -239,7 +239,7 @@ html.measuring .noprint,html.measuring th.nop,html.measuring td.nop,html.measuri
       </thead>
       <tbody></tbody>
     </table></div>
-    <div class="btnrow"><button class="btn" data-print>🖨 พิมพ์ / บันทึกเป็น PDF</button></div>
+    <div class="btnrow"><button class="btn" data-print>🖨 พิมพ์ / บันทึกเป็น PDF</button><button class="btn ghost" data-xlsx>⬇ Export Excel (.xlsx)</button></div>
   </div>
 </section>
 
@@ -283,7 +283,7 @@ html.measuring .noprint,html.measuring th.nop,html.measuring td.nop,html.measuri
       </thead>
       <tbody></tbody>
     </table></div>
-    <div class="btnrow"><button class="btn" data-print>🖨 พิมพ์ / บันทึกเป็น PDF</button></div>
+    <div class="btnrow"><button class="btn" data-print>🖨 พิมพ์ / บันทึกเป็น PDF</button><button class="btn ghost" data-xlsx>⬇ Export Excel (.xlsx)</button></div>
   </div>
 </section>
 
@@ -310,7 +310,7 @@ html.measuring .noprint,html.measuring th.nop,html.measuring td.nop,html.measuri
       <tbody></tbody>
     </table></div>
     <details class="excl" id="d3_excl"></details>
-    <div class="btnrow"><button class="btn" data-print>🖨 พิมพ์ / บันทึกเป็น PDF</button></div>
+    <div class="btnrow"><button class="btn" data-print>🖨 พิมพ์ / บันทึกเป็น PDF</button><button class="btn ghost" data-xlsx>⬇ Export Excel (.xlsx)</button></div>
   </div>
 </section>
 
@@ -336,7 +336,7 @@ html.measuring .noprint,html.measuring th.nop,html.measuring td.nop,html.measuri
       <tbody></tbody>
     </table></div>
     <details class="excl" id="d4_excl"></details>
-    <div class="btnrow"><button class="btn" data-print>🖨 พิมพ์ / บันทึกเป็น PDF</button></div>
+    <div class="btnrow"><button class="btn" data-print>🖨 พิมพ์ / บันทึกเป็น PDF</button><button class="btn ghost" data-xlsx>⬇ Export Excel (.xlsx)</button></div>
   </div>
 </section>
 
@@ -363,7 +363,7 @@ html.measuring .noprint,html.measuring th.nop,html.measuring td.nop,html.measuri
       <tbody></tbody>
     </table></div>
     <details class="excl" id="d5_excl"></details>
-    <div class="btnrow"><button class="btn" data-print>🖨 พิมพ์ / บันทึกเป็น PDF</button></div>
+    <div class="btnrow"><button class="btn" data-print>🖨 พิมพ์ / บันทึกเป็น PDF</button><button class="btn ghost" data-xlsx>⬇ Export Excel (.xlsx)</button></div>
   </div>
 </section>
 
@@ -376,7 +376,7 @@ html.measuring .noprint,html.measuring th.nop,html.measuring td.nop,html.measuri
       <thead><tr><th>ลำดับ</th><th>ชื่อ – สกุล</th><th>คุณวุฒิ</th><th>วันที่จ้าง</th><th>ตั้งต้น</th><th>เอกสาร 1<br>จ้างใหม่</th><th>เอกสาร 2<br>1 พ.ค. 67</th><th>เอกสาร 3<br>1 ต.ค. 67</th><th>เอกสาร 4<br>1 พ.ค. 68</th><th>เอกสาร 5<br>1 ต.ค. 68</th><th>อัตราล่าสุด</th><th>เงินตกเบิกสุทธิ<br>(จ่ายคืน−เรียกคืน)</th><th class="nop"></th></tr></thead>
       <tbody></tbody>
     </table></div>
-    <div class="btnrow"><button class="btn" data-print>🖨 พิมพ์ / บันทึกเป็น PDF</button></div>
+    <div class="btnrow"><button class="btn" data-print>🖨 พิมพ์ / บันทึกเป็น PDF</button><button class="btn ghost" data-xlsx>⬇ Export Excel (.xlsx)</button></div>
   </div>
 </section>
 
@@ -403,7 +403,7 @@ html.measuring .noprint,html.measuring th.nop,html.measuring td.nop,html.measuri
       <thead><tr><th>ลำดับ</th><th>ชื่อ – สกุล</th><th>สุทธิ ช่วง<br>พ.ค.–ก.ย. 67</th><th>สุทธิ ช่วง<br>ต.ค. 67–เม.ย. 68</th><th>สุทธิ ช่วง<br>พ.ค.–ก.ย. 68</th><th>สุทธิ ช่วง<br>ตั้งแต่ ต.ค. 68</th><th>จ่ายคืนรวม</th><th>เรียกคืนรวม</th><th>เงินตกเบิกสุทธิ</th></tr></thead>
       <tbody></tbody>
     </table></div>
-    <div class="btnrow"><button class="btn" data-print>🖨 พิมพ์ / บันทึกเป็น PDF</button></div>
+    <div class="btnrow"><button class="btn" data-print>🖨 พิมพ์ / บันทึกเป็น PDF</button><button class="btn ghost" data-xlsx>⬇ Export Excel (.xlsx)</button></div>
   </div>
   <div class="roster pgbreak">
     <h3>แนวทางการบันทึกบัญชี (สร้างอัตโนมัติจากยอดรวม)</h3>
@@ -1200,6 +1200,7 @@ function syncEndMax(){
 document.addEventListener("click",e=>{
   if(e.target.matches("[data-print]")) window.print();
   if(e.target.matches("[data-csv]")) exportCSV(e.target.dataset.csv);
+  if(e.target.matches("[data-xlsx]")){ const p=e.target.closest(".panel"); if(p) exportXlsx(p.id); }
 });
 /* ===== ปรับขนาดตัวอักษรตอนพิมพ์ให้เต็มกรอบ: เริ่มที่ 16pt แล้วย่อตามสัดส่วนถ้าหน้ากระดาษไม่พอ =====
    วัดความกว้างจริงของตาราง (จำลองหน้าพิมพ์ที่ 16pt) เทียบกับความกว้างพื้นที่พิมพ์ A4 แนวนอน */
@@ -1220,7 +1221,9 @@ function fitPrintTables(){
   document.documentElement.classList.remove("measuring");
 }
 window.addEventListener("beforeprint",fitPrintTables);
-function exportCSV(id){
+const SHEET_NAMES={d1:"เอกสาร1 จ้างใหม่",d2:"เอกสาร2 ปรับชดเชย 67",d3:"เอกสาร3 เลื่อน 1 ต.ค.67",d4:"เอกสาร4 ปรับชดเชย 68",d5:"เอกสาร5 เลื่อน 1 ต.ค.68",sum:"สรุปรายบุคคล",retro:"ตกเบิกรายบุคคล"};
+/* สร้างชุดข้อมูลตาราง ใช้ร่วมกันทั้ง CSV และ Excel — ตัวเลขคงชนิดตัวเลขจริง (ไม่ใส่ comma) */
+function tableData(id){
   let head,rows;
   const SRC={d1:"เอกสาร 1",d2:"เอกสาร 2",d3:"เอกสาร 3",d4:"เอกสาร 4"};
   if(id==="d1"){
@@ -1274,11 +1277,91 @@ function exportCSV(id){
         t5?(t5.new?t5.new.newWage:"รอ%"):"-",
         latestWage(e),Math.round(retroTotals(e).net*100)/100];});
   }
-  if(!rows.length){alert("ยังไม่มีรายชื่อในหน้านี้");return;}
-  const csv="\uFEFF"+[head,...rows].map(a=>a.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\r\n");
+  let sheets;
+  if(id==="retro") sheets=[retroAggSheet(), {name:SHEET_NAMES.retro,head,rows}, retroJournalSheet()];
+  else sheets=[{name:SHEET_NAMES[id]||"ข้อมูล",head,rows}];
+  return {id, filename:(SHEET_NAMES[id]||("บัญชี_"+id)), sheets};
+}
+/* ตกเบิก: ตารางรวมตามช่วงเวลา (คำนวณเหมือน renderRetro) */
+function retroAggSheet(){
+  const P=retroPeriods(), all=EMP.map(e=>({e,rows:retroCalc(e)})), r2=v=>Math.round(v*100)/100;
+  const head=["ช่วงเวลา","จำนวนคน","เดิม ค่าตอบแทน","เดิม ค่าครองชีพ","เดิม รวม","ใหม่ ค่าตอบแทน","ใหม่ ค่าครองชีพ","ใหม่ รวม","รวมตกเบิกสุทธิ","เรียกคืนค่าครองชีพ","จ่ายคืน"];
+  const rows=P.map((p,i)=>{let cnt=0,o=0,oa=0,n=0,na=0,pay=0,claw=0;all.forEach(x=>{const r=x.rows[i];if(r.m>0){cnt++;o+=r.o;oa+=r.oa;n+=r.n;na+=r.na;}pay+=r.pay;claw+=r.claw;});
+    return [p.label,cnt,r2(o),r2(oa),r2(o+oa),r2(n),r2(na),r2(n+na),r2(pay-claw),r2(claw),r2(pay)];});
+  return {name:"รวมตามช่วงเวลา",head,rows};
+}
+/* ตกเบิก: แนวทางบันทึกบัญชี (อ่านจากที่เรนเดอร์ไว้) */
+function retroJournalSheet(){
+  const el=document.getElementById("retro_journal"), head=["รายการ","จำนวนเงิน"], rows=[];
+  [...el.children].forEach(node=>{
+    if(node.tagName==="H4") rows.push([node.textContent.trim(),""]);
+    else if(node.classList.contains("jrow")){ const sp=node.querySelectorAll("span"); const amt=parseFloat((sp[1]?sp[1].textContent:"").replace(/,/g,"")); rows.push([sp[0]?sp[0].textContent.trim():"", isFinite(amt)?amt:(sp[1]?sp[1].textContent.trim():"")]); }
+    else { const t=node.textContent.trim(); if(t) rows.push([t,""]); }
+  });
+  return {name:"บันทึกบัญชี",head,rows};
+}
+function exportCSV(id){
+  if(!EMP.length){alert("ยังไม่มีรายชื่อในหน้านี้");return;}
+  const s=tableData(id).sheets[0];
+  if(!s.rows.length){alert("ยังไม่มีรายชื่อในหน้านี้");return;}
+  const csv="﻿"+[s.head,...s.rows].map(a=>a.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\r\n");
   const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
   const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
   a.download="บัญชี_"+id+".csv"; a.click(); URL.revokeObjectURL(a.href);
+}
+/* ================= Export Excel (.xlsx) — สร้างไฟล์ ZIP/OOXML เอง ไม่พึ่ง library ================= */
+function _crc32(b){ let t=_crc32.t; if(!t){t=_crc32.t=[];for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?(0xEDB88320^(c>>>1)):(c>>>1);t[n]=c>>>0;}}
+  let crc=0xFFFFFFFF; for(let i=0;i<b.length;i++)crc=(crc>>>8)^t[(crc^b[i])&0xFF]; return (crc^0xFFFFFFFF)>>>0; }
+function _zip(files){
+  const enc=new TextEncoder(), d=new Date();
+  const time=((d.getHours()&31)<<11)|((d.getMinutes()&63)<<5)|(((d.getSeconds()/2)|0)&31);
+  const date=(((d.getFullYear()-1980)&127)<<9)|(((d.getMonth()+1)&15)<<5)|(d.getDate()&31);
+  const u16=n=>[n&255,(n>>8)&255], u32=n=>[n&255,(n>>8)&255,(n>>16)&255,(n>>24)&255];
+  const parts=[], cen=[]; let off=0;
+  files.forEach(f=>{ const nb=enc.encode(f.name), data=f.data, crc=_crc32(data);
+    const lh=new Uint8Array([].concat(u32(0x04034b50),u16(20),u16(0),u16(0),u16(time),u16(date),u32(crc),u32(data.length),u32(data.length),u16(nb.length),u16(0)));
+    parts.push(lh,nb,data);
+    cen.push(new Uint8Array([].concat(u32(0x02014b50),u16(20),u16(20),u16(0),u16(0),u16(time),u16(date),u32(crc),u32(data.length),u32(data.length),u16(nb.length),u16(0),u16(0),u16(0),u16(0),u32(0),u32(off))), nb);
+    off += lh.length+nb.length+data.length;
+  });
+  let cs=0; cen.forEach(c=>cs+=c.length);
+  const end=new Uint8Array([].concat(u32(0x06054b50),u16(0),u16(0),u16(files.length),u16(files.length),u32(cs),u32(off),u16(0)));
+  return new Blob([...parts,...cen,end],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+}
+function _xmlEsc(s){return String(s==null?"":s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));}
+function _colName(n){let s="";while(n>0){const m=(n-1)%26;s=String.fromCharCode(65+m)+s;n=(n-1-m)/26;}return s;}
+function _sheetXml(head,rows){
+  const cell=(r,c,v,hdr)=>{const ref=_colName(c)+r; if(typeof v==="number"&&isFinite(v))return `<c r="${ref}"${hdr?' s="1"':''}><v>${v}</v></c>`;
+    return `<c r="${ref}"${hdr?' s="1"':''} t="inlineStr"><is><t xml:space="preserve">${_xmlEsc(v)}</t></is></c>`;};
+  let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>';
+  x+='<row r="1">'+head.map((h,j)=>cell(1,j+1,h,true)).join("")+'</row>';
+  rows.forEach((row,ri)=>{ x+=`<row r="${ri+2}">`+row.map((v,j)=>cell(ri+2,j+1,v,false)).join("")+"</row>"; });
+  return x+"</sheetData></worksheet>";
+}
+function _tabName(n,i){return _xmlEsc(String(n||("Sheet"+(i+1))).replace(/[\\\/\?\*\[\]:]/g," ").slice(0,31));}
+const _STYLES='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Tahoma"/></font><font><b/><sz val="11"/><name val="Tahoma"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
+function buildXlsx(sheets){
+  const enc=new TextEncoder(), files=[], add=(n,s)=>files.push({name:n,data:enc.encode(s)});
+  let ct='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>';
+  sheets.forEach((s,i)=>ct+=`<Override PartName="/xl/worksheets/sheet${i+1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`);
+  ct+="</Types>"; add("[Content_Types].xml",ct);
+  add("_rels/.rels",'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>');
+  let wb='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>';
+  sheets.forEach((s,i)=>wb+=`<sheet name="${_tabName(s.name,i)}" sheetId="${i+1}" r:id="rId${i+1}"/>`);
+  wb+="</sheets></workbook>"; add("xl/workbook.xml",wb);
+  let wr='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">';
+  sheets.forEach((s,i)=>wr+=`<Relationship Id="rId${i+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i+1}.xml"/>`);
+  wr+=`<Relationship Id="rId${sheets.length+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`;
+  add("xl/_rels/workbook.xml.rels",wr); add("xl/styles.xml",_STYLES);
+  sheets.forEach((s,i)=>add(`xl/worksheets/sheet${i+1}.xml`,_sheetXml(s.head,s.rows)));
+  return _zip(files);
+}
+function exportXlsx(id){
+  if(!EMP.length){alert("ยังไม่มีรายชื่อในหน้านี้");return;}
+  const d=tableData(id), sheets=d.sheets.filter(s=>s.rows&&s.rows.length);
+  if(!sheets.length){alert("ยังไม่มีรายชื่อในหน้านี้");return;}
+  const a=document.createElement("a"); a.href=URL.createObjectURL(buildXlsx(sheets));
+  a.download=d.filename+".xlsx"; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
 
 /* ================= บันทึก/เปิดไฟล์ข้อมูล ================= */
